@@ -1,5 +1,6 @@
 #include <PestoLink-Receive.h>
 #include <Alfredo_NoU3.h>
+#include <HCSRO4_attachInterrupt.h>
 #include <Keys.h>
 #include <FastLED.h>
 #define pi 3.14159265359
@@ -25,3 +26,4 @@ NoU_Motor rearLeftMotor(3);
 NoU_Motor rearRightMotor(4);
 
 NoU_Drivetrain drivetrain(&frontLeftMotor, &frontRightMotor, &rearLeftMotor, &rearRightMotor);
+HCSRO4 distanceSensor = HCSRO4(distanceTrig, distanceEcho, 1.0 / 148);

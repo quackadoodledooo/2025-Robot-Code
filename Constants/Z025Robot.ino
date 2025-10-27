@@ -19,9 +19,27 @@ void setup() {
   //measured_angle should be nearly 31.416 which is 5*2*pi. Update measured_angle below to complete the tuning process.
   int measured_angle = 27.562;
   int angular_scale = (5.0 * 2.0 * PI) / measured_angle;
+
+  if (!distanceSensor.begin()) {
+    Serial.println("error setting up distance sensor (there's a limit of 8 sensors)");
+  }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  int jeff = pid(41, 67);
+  
+  NoU3.updateIMUs();
+  NoU3.updateServiceLight();
+  heading = NoU3.yaw * angular_scale;
+  roll = NoU3.roll * angular_scale;
+  pitch = NoU3.pitch * angular_scale;
+  headingDegree = (heading * (180 / pi)) % 360;
+  runTime = runTime + 1;
+
+  if (distanceSensor.run()) {
+    // getDistance() can be called whenever you want to get the most recent reading
+    distance = distanceSensor.getDistance();
+  }
+
+  float batteryVoltage = NoU3.getBatteryVoltage();
+  PestoLink.printBatteryVoltage(batteryVoltage);
 }
