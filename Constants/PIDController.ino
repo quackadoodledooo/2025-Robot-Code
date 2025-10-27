@@ -2,11 +2,11 @@ float pid(float currentMotorPosition, float goalMotorPosition) {
   unsigned long now = millis();  
   double timeChange = (double)(now - previousTime);
   if (timeChange >= SampleTime) {
-    error = (goalMotorPosition - currentMotorPosition) * Kp;// calculate error
+    error = (goalMotorPosition - currentMotorPosition);// calculate error
     integral += error * Ki;//calculate error over time
-    derivative = (currentMotorPosition - previousInput) * Kd;// calculate how much error is changing
+    derivative = (currentMotorPosition - previousInput);// calculate how much error is changing
 
-    float output = error + integral - derivative;//calculate error
+    float output = error * Kp + integral - derivative * Kd;//calculate error
 
     if (abs(error) < 0.005) {
       output = 0; 
