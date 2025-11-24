@@ -43,9 +43,9 @@ void setup() {
 void setLEDS() {
   if (STATE == START) {
     leds[0] = CRGB::Yellow;
-  } else if (STATE = CORAL) {
+  } else if (STATE == CORAL) {
     leds[0] = CRGB::White;
-  } else if (STATE = ALGAE) {
+  } else if (STATE == ALGAE) {
     leds[0] = CRGB::Blue;
   }
 

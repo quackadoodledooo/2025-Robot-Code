@@ -37,5 +37,26 @@ enum {
   START,
   CORAL,
   ALGAE
-} STATE; 
+} STATE;
+
+enum {
+  STOW = 0,
+  L1 = 0.1,
+  L2 = 0.2,
+  L3 = 0.3,
+  L4 = 0.4,
+  AL2 = 0.25,
+  AL3 = 0.35
+} elevatorLevel;
+
+enum {
+  STOW = 0,
+  L1 = 0.1,
+  L2 = 0.2,
+  L3 = 0.3,
+  L4 = 0.4,
+  AL2 = 0.25,
+  AL3 = 0.35
+} pivotLevel;
+
 #endif
