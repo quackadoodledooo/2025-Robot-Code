@@ -1,7 +1,6 @@
 #include "PID.h"
-#include "Constants.h"
 
-PID:PID(float kp, float ki, float kd, float min, float max) {
+PID::PID(float kp, float ki, float kd, float min, float max) {
   this->kp = kp;
   this->ki = ki;
   this->kd = kd;
@@ -10,21 +9,21 @@ PID:PID(float kp, float ki, float kd, float min, float max) {
   this->previousError = 0;
   this->integral = 0; 
   this->start = 0;
-  this->previousTime = 0;
+  this->previous = 0;
 }
 
-PID:update(float error, float velocity) {
+float PID::update(float error) {
   unsigned long current_time = millis(); // get the current time in milliseconds
   float timestep; 
 
-  if (this->previousTime == 0) {
+  if (this->previous == 0) {
     this->start = current_time;
     timestep = 0.001; //set an initial timestep of 1ms
   } else {
-    timestep = (current_time - this->previousTime) / 1000; // gets timestep in seconds
+    timestep = (current_time - this->previous) / 1000; // gets timestep in seconds
   }
 
-  this->previousTime = current_time;
+  this->previous = current_time;
 
   float derivative = 0;
   if (timestep != 0) 
@@ -32,7 +31,9 @@ PID:update(float error, float velocity) {
 
   this->integral += error*timestep; // calulate integral part
 
-  integral = constrain(this->integral, -max_integral, max_integral); //clap integral to prevent it from winding up
+  float max_integral = 1000;  // adjust as needed
+  if (this->integral > max_integral) this->integral = max_integral;
+  if (this->integral < -max_integral) this->integral = -max_integral; //clap integral to prevent it from winding up
 
   //calulae ouput
   float output = this->kp * error + this->ki * this->integral + this->kd * derivative;
@@ -46,5 +47,5 @@ PID:update(float error, float velocity) {
 
 void PID::clear() {
   this->previousError = 0;
-  this->previousTime = 0; 
+  this->previous = 0; 
 }
