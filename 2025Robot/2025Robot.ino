@@ -159,7 +159,7 @@ void loop() {
       diffBarge += currentTime - previousTime;
       if(diffBarge > 1000){
         pivotGoal = pivotBarge;
-        diffBarge = 0; 
+        diffBarge = 0; //hello
       }
     }
   }
