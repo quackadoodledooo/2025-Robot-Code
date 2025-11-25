@@ -7,7 +7,7 @@ NoU_Motor frontLeftMotor(1);
 NoU_Motor frontRightMotor(2);
 NoU_Motor rearLeftMotor(3);
 NoU_Motor rearRightMotor(4);
-NoU_Motor pivot(5);
+NoU_Motor pivot(7);
 
 NoU_Servo elevatorLeft(1);
 NoU_Servo elevatorRight(3);
@@ -65,37 +65,115 @@ void loop() {
   float batteryVoltage = NoU3.getBatteryVoltage();
   PestoLink.printBatteryVoltage(batteryVoltage);
 
-  if (PestoLink.keyHeld(Key::Numpad9)) {
+  if (PestoLink.buttonHeld(leftMain)) {
       PestoLink.rumble();
   }
 
   FastLED.show();
 
   if(PestoLink.keyHeld(Key::ArrowUp)) {
-    if (servoGoal > 0 && servoGoal < 180) {
-      servoGoal++;
-    }
+    servoGoal++;
   }
   if(PestoLink.keyHeld(Key::ArrowDown)) {
-    if (servoGoal > 0 && servoGoal < 180) {
-      servoGoal--;
-    }
+    servoGoal--;
   }
   if(PestoLink.keyHeld(Key::ArrowLeft)) {
-    if (pivotGoal > 0 && pivotGoal < 180) {
-      pivotGoal--;
-    }
+    Serial.println("left");
+    pivotGoal--;
+    Serial.println("elevator up");
+    Serial.println(pivotGoal);
+    Serial.println(pivotPosition);
   }
   if(PestoLink.keyHeld(Key::ArrowRight)) {
-    if (pivotGoal > 0 && pivotGoal < 180) {
-      pivotGoal++;
+    pivotGoal++;
+    Serial.println("elevator down");
+    Serial.println(pivotGoal);
+    Serial.println(pivotPosition);
+  }
+  //switch modes
+  if(PestoLink.buttonHeld(leftBumper)) {
+    if(STATE == CORAL) STATE = ALGAE;
+    if(STATE == ALGAE) STATE = CORAL; 
+  }
+
+  if(STATE == CORAL) { // CORAL MODE PRESETS
+    if(PestoLink.buttonHeld(buttonA)) { //L1
+      servoGoal = servoL1;
+      diffL1 += currentTime - previousTime;
+      if(diffL1 > 1000){
+        pivotGoal = pivotL1;
+        diffL1 = 0; 
+      }
+    }
+    if(PestoLink.buttonHeld(buttonB)) { //L2
+      servoGoal = servoL2;
+      diffL2 += currentTime - previousTime;
+      if(diffL2 > 1000){
+        pivotGoal = pivotL2;
+        diffL2 = 0; 
+      }
+    }
+    if(PestoLink.buttonHeld(buttonX)) { //L3
+      servoGoal = servoL3;
+      diffL3 += currentTime - previousTime;
+      if(diffL3 > 1000){
+        pivotGoal = pivotL3;
+        diffL3 = 0; 
+      }
+    }
+    if(PestoLink.buttonHeld(buttonY)) { //L4
+      servoGoal = servoL4;
+      diffL4 += currentTime - previousTime;
+      if(diffL4 > 1000){
+        pivotGoal = pivotL4;
+        diffL4 = 0; 
+      }
+    }
+    if(PestoLink.buttonHeld(leftTrigger)) { //STOW/INTAKE
+      servoGoal = servoSTOW;
+      diffSTOW += currentTime - previousTime;
+      if(diffSTOW > 1000){
+        pivotGoal = pivotSTOW;
+        diffSTOW = 0; 
+      }
+    }
+  } else if (STATE == ALGAE) { // ALGAE MODE PRESETS
+    if(PestoLink.buttonHeld(buttonB)) { //L2 algae
+      servoGoal = servoAL2;
+      diffAL2 += currentTime - previousTime;
+      if(diffAL2 > 1000){
+        pivotGoal = pivotAL2;
+        diffAL2 = 0; 
+      }
+    }
+    if(PestoLink.buttonHeld(buttonB)) { //L3 algae
+      servoGoal = servoAL3;
+      diffAL3 += currentTime - previousTime;
+      if(diffAL3 > 1000){
+        pivotGoal = pivotAL3;
+        diffAL3 = 0; 
+      }
+    }
+    if(PestoLink.buttonHeld(buttonB)) { //Barge
+      servoGoal = servoBarge;
+      diffBarge += currentTime - previousTime;
+      if(diffBarge > 1000){
+        pivotGoal = pivotBarge;
+        diffBarge = 0; 
+      }
     }
   }
-  
+
+  if(pivotGoal>180) pivotGoal = 360;
+  if(pivotGoal<0) pivotGoal = 0;
+  if(servoGoal>180) servoGoal = 360;
+  if(servoGoal<0) servoGoal = 0;
 
   elevatorLeft.write(servoGoal);
-  elevatorRight.write(servoGoal);
+  elevatorRight.write((-1 * servoGoal) + 180);
   
-  pivotError = pivotPosition - pivotGoal;
+  pivotError = pivotGoal - pivotPosition;
   pivot.set(pivotPID.update(pivotError));
+  
+  previousTime = currentTime; 
 }
