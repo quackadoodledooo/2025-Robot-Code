@@ -92,8 +92,10 @@ void loop() {
   }
   //switch modes
   if(PestoLink.buttonHeld(leftBumper)) {
+    if(millis() - lastModeSwitch >= 200){
     if(STATE == CORAL) STATE = ALGAE;
     if(STATE == ALGAE) STATE = CORAL; 
+    }
   }
 
   if(STATE == CORAL) { // CORAL MODE PRESETS

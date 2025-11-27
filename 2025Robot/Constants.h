@@ -24,6 +24,7 @@ int previousTime = 0;
 int servoGoal = 0;
 int pivotGoal = 0;
 int pivotError = 0;
+int lastModeSwitch = 0;
 
 const int distanceTrig = 11;
 const int distanceEcho = 10;
