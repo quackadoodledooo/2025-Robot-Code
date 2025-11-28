@@ -31,9 +31,8 @@ int lastModeSwitch = 0;
 const int distanceTrig = 11;
 const int distanceEcho = 10;
 
-//diff variables to be used in controls
+//diff variables to be used in controls to control delay
 double diffSTOW = 0;
-double diffL1 = 0;
 double diffL2 = 0;
 double diffL3 = 0;
 double diffL4 = 0;
@@ -50,23 +49,21 @@ const double pivotMax = 1;
 
 //Preset values for elevator
 const double servoSTOW = 0;
-const double servoL1 = 10;
-const double servoL2 = 20;
-const double servoL3 = 30;
-const double servoL4 = 40;
-const double servoAL2 = 25;
-const double servoAL3 = 35;
-const double servoBarge = 50;
+const double servoL2 = 0;
+const double servoL3 = 0;
+const double servoL4 = 140;
+const double servoAL2 = 120;
+const double servoAL3 = 0;
+const double servoBarge = 180;
 
 //Preset values for pivot
 const double pivotSTOW = 0;
-const double pivotL1 = 0.1;
-const double pivotL2 = 0.2;
-const double pivotL3 = 0.3;
-const double pivotL4 = 0.4;
-const double pivotAL2 = 0.25;
-const double pivotAL3 = 0.35;
-const double pivotBarge = 0.5;
+const double pivotL2 = 360;
+const double pivotL3 = 500;
+const double pivotL4 = 500;
+const double pivotAL2 = 0;
+const double pivotAL3 = 600;
+const double pivotBarge = 700;
 
 //Bindings for Xbox controller
 const int buttonA = 0;

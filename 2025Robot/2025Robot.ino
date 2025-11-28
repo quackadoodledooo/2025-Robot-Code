@@ -103,10 +103,16 @@ void loop() {
       if(STATE == CORAL) {
          STATE = ALGAE;
          lastModeSwitch = millis();
+         coral.setBrakeMode(true);
+         algae1.setBrakeMode(false);
+         algae2.setBrakeMode(false);
       }
       if(STATE == ALGAE){
          STATE = CORAL;
          lastModeSwitch = millis();
+         coral.setBrakeMode(false);
+         algae1.setBrakeMode(true);
+         algae2.setBrakeMode(true);
       } 
     }
   }
@@ -186,9 +192,9 @@ void loop() {
     }
   }
 
-  if(pivotGoal>180) pivotGoal = 360;
+  if(pivotGoal>720) pivotGoal = 720;
   if(pivotGoal<0) pivotGoal = 0;
-  if(servoGoal>180) servoGoal = 360;
+  if(servoGoal>180) servoGoal = 180;
   if(servoGoal<0) servoGoal = 0;
 
   elevatorLeft.write(servoGoal);
@@ -196,6 +202,8 @@ void loop() {
   
   pivotError = pivotGoal - pivotPosition;
   pivot.set(pivotPID.update(pivotError));
+  Serial.println(pivotPosition);
+  Serial.println(pivotGoal);
   
   previousTime = currentTime; 
 }
