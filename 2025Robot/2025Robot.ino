@@ -3,14 +3,14 @@
 
 PID pivotPID(pivotKp, pivotKi, pivotKd, pivotMin, pivotMax);
 
-NoU_Motor DriveMotor1(1);
-NoU_Servo TurnServo1(1, 500, 2500);
-NoU_Motor DriveMotor2(2);
-NoU_Servo TurnServo2(2, 500, 2500);
-NoU_Motor DriveMotor3(3);
-NoU_Servo TurnServo3(3, 500, 2500);
-NoU_Motor DriveMotor4(4);
-NoU_Servo TurnServo4(4 500, 2500);
+NoU_Motor Drive1(1);
+NoU_Servo Turn1(1, 500, 2500);
+NoU_Motor Drive2(2);
+NoU_Servo Turn2(2, 500, 2500);
+NoU_Motor Drive3(3);
+NoU_Servo Turn3(3, 500, 2500);
+NoU_Motor Drive4(4);
+NoU_Servo Turn4(4, 500, 2500);
 
 NoU_Motor algae1(5);
 NoU_Motor algae2(6);
@@ -19,8 +19,6 @@ NoU_Motor pivot(7);
 
 NoU_Servo elevatorLeft(5);
 NoU_Servo elevatorRight(6);
-
-NoU_Drivetrain drivetrain(&frontLeftMotor, &frontRightMotor, &rearLeftMotor, &rearRightMotor);
 
 //The gyroscope sensor is by default precise, but not accurate. This is fixable by adjusting the angular scale factor.
 //Tuning procedure:
@@ -36,9 +34,6 @@ void setup() {
   NoU3.calibrateIMUs();
   pivot.beginEncoder();
   xTaskCreatePinnedToCore(taskUpdateSwerve, "taskUpdateSwerve", 4096, NULL, 2, NULL, 1);
-
-  frontLeftMotor.setInverted(true);
-  rearLeftMotor.setInverted(true);
   
   pinMode(6, INPUT_PULLUP);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
@@ -105,8 +100,14 @@ void loop() {
   //switch modes
   if(PestoLink.buttonHeld(leftBumper)) {
     if(millis() - lastModeSwitch >= 200){
-    if(STATE == CORAL) STATE = ALGAE;
-    if(STATE == ALGAE) STATE = CORAL; 
+      if(STATE == CORAL) {
+         STATE = ALGAE;
+         lastModeSwitch = millis();
+      }
+      if(STATE == ALGAE){
+         STATE = CORAL;
+         lastModeSwitch = millis();
+      } 
     }
   }
 
@@ -151,7 +152,7 @@ void loop() {
     }
 
   } else if (STATE == ALGAE) { // ALGAE MODE PRESETS
-    if(PestoLink.buttonHeld(buttonB)) { //L2 algae
+    if(PestoLink.buttonHeld(buttonY)) { //L2 algae
       servoGoal = servoAL2;
       diffAL2 += currentTime - previousTime;
       if(diffAL2 > 1000){
@@ -159,7 +160,7 @@ void loop() {
         diffAL2 = 0; 
       }
     }
-    if(PestoLink.buttonHeld(buttonB)) { //L3 algae
+    if(PestoLink.buttonHeld(buttonA)) { //L3 algae
       servoGoal = servoAL3;
       diffAL3 += currentTime - previousTime;
       if(diffAL3 > 1000){
