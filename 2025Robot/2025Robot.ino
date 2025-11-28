@@ -84,6 +84,27 @@ void loop() {
   }
 
   FastLED.show();
+  
+  /**
+  CONTROLS
+  Up/Down arrows - Manual elevator control
+  Left/Right arrows - Manual pivot control
+  Left bumper - Switch modes
+  Right bumper - Prepare to score
+  CORAL MODE:
+    A - L2
+    B - L3
+    Y - L4
+    X - Stow
+    Left trigger - Intake
+    Right trigger - Outtake
+  ALGAE MODE:
+    Y - L2
+    A - L3
+    B - Barge
+    Left trigger - intake
+    Right trigger - outtake
+  */
 
   if(PestoLink.keyHeld(Key::ArrowUp)) {
     servoGoal++;
@@ -117,28 +138,41 @@ void loop() {
     }
   }
 
+  if(PestoLink.buttonHeld(rightBumper)) { //Prepare to score
+      servoGoal = servoReady+20;
+      diffL2 += currentTime - previousTime;
+      if(diffL2 > 1000){
+        pivotGoal = pivotReady;
+        servoGoal = servoReady;
+        diffL2 = 0; 
+      }
+    }
+
   if(STATE == CORAL) { // CORAL MODE PRESETS
     if(PestoLink.buttonHeld(buttonA)) { //L2
-      servoGoal = servoL2;
+      servoGoal = servoL2+20;
       diffL2 += currentTime - previousTime;
       if(diffL2 > 1000){
         pivotGoal = pivotL2;
+        servoGoal = servoL2;
         diffL2 = 0; 
       }
     }
     if(PestoLink.buttonHeld(buttonB)) { //L3
-      servoGoal = servoL3;
+      servoGoal = servoL3+20;
       diffL3 += currentTime - previousTime;
       if(diffL3 > 1000){
         pivotGoal = pivotL3;
+        servoGoal = servoL3;
         diffL3 = 0; 
       }
     }
     if(PestoLink.buttonHeld(buttonX)) { //Stow
-      servoGoal = servoSTOW;
+      pivotGoal = pivotSTOW;
+      servoGoal = servoSTOW+20;
       diffSTOW += currentTime - previousTime;
       if(diffSTOW > 1000){
-        pivotGoal = pivotSTOW;
+        servoGoal = servoSTOW;
         diffSTOW = 0; 
       }
     }
@@ -153,24 +187,26 @@ void loop() {
     if(PestoLink.buttonHeld(leftTrigger)) { //INTAKE
        coral.set(1);
     }
-    if(PestoLink.buttonHeld(rightTrigger)){
+    if(PestoLink.buttonHeld(rightTrigger)){ //OUTTAKE
       coral.set(-1);
     }
 
   } else if (STATE == ALGAE) { // ALGAE MODE PRESETS
     if(PestoLink.buttonHeld(buttonY)) { //L2 algae
-      servoGoal = servoAL2;
+      servoGoal = servoAL2+20;
       diffAL2 += currentTime - previousTime;
       if(diffAL2 > 1000){
         pivotGoal = pivotAL2;
+        servoGoal = servoAL2;
         diffAL2 = 0; 
       }
     }
     if(PestoLink.buttonHeld(buttonA)) { //L3 algae
-      servoGoal = servoAL3;
+      servoGoal = servoAL3 + 20;
       diffAL3 += currentTime - previousTime;
       if(diffAL3 > 1000){
         pivotGoal = pivotAL3;
+        servoGoal = servoAL3;
         diffAL3 = 0; 
       }
     }
@@ -182,11 +218,11 @@ void loop() {
         diffBarge = 0; //hello
       }
     }
-    if(PestoLink.buttonHeld(leftTrigger)){
+    if(PestoLink.buttonHeld(leftTrigger)){ //INTAKE
       algae1.set(1);
       algae2.set(-1);
     }
-    if(PestoLink.buttonHeld(rightTrigger)){
+    if(PestoLink.buttonHeld(rightTrigger)){// OUTTAKE
       algae1.set(-1);
       algae2.set(1);
     }

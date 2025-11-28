@@ -49,6 +49,7 @@ const double pivotMax = 1;
 
 //Preset values for elevator
 const double servoSTOW = 0;
+const double servoReady = 20;
 const double servoL2 = 0;
 const double servoL3 = 0;
 const double servoL4 = 140;
@@ -58,6 +59,7 @@ const double servoBarge = 180;
 
 //Preset values for pivot
 const double pivotSTOW = 0;
+const double pivotReady = 40;
 const double pivotL2 = 360;
 const double pivotL3 = 500;
 const double pivotL4 = 500;
@@ -71,7 +73,7 @@ const int buttonB = 1;
 const int buttonX = 2;
 const int buttonY = 3;
 const int leftBumper = 4;
-const int rightBumber = 5; 
+const int rightBumper = 5; 
 const int leftTrigger = 6;
 const int rightTrigger = 7;
 const int leftMain = 8;
