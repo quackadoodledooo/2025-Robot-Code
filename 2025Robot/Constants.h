@@ -1,16 +1,18 @@
-#ifndef CONSTANTS
-#define CONSTANTS
+#ifndef VARS
+#define VARS
 
 #include <PestoLink-Receive.h>
 #include <Alfredo_NoU3.h>
 #include <Keys.h>
 #include <FastLED.h>
 #include <Arduino.h>
+#include <cmath>
+#include <tgmath.h>
 
 #define PI 3.14159265359
 #define FASTLED_ALLOW_INTERRUPTS 0   //FASTLED SERIAL INTERRUPTS ALLOWED TO ZERO
 #define NUM_LEDS 32                 //NUM OF LEDS IN CHAIN                       
-#define DATA_PIN 7                 //DATA PIN 5 (GPIO D5)                         
+#define DATA_PIN 39                 //DATA PIN 5 (GPIO D5)                         
 CRGB leds[NUM_LEDS];
 
 double distance = 0;
@@ -83,6 +85,25 @@ const int upDPad = 12;
 const int downDPad = 13;
 const int leftDPad = 14;
 const int rightDPad = 15;
+
+//swerve vars
+double turnMag = 0.0;
+double driveAngle = 0.0;
+double driveMag = 0.0;
+double drivetrainVectors[4][2] = { { 0, 0 },
+                                   { 0, 0 },
+                                   { 0, 0 },
+                                   { 0, 0 } };
+
+double theta;
+double headingOffset = 0.0;
+int mod1Offset = 0;
+int mod2Offset = 0;
+int mod3Offset = 0;
+int mod4Offset = 0;
+int lastOffsetTime = millis();
+
+const bool AM_DEBUGGING = false;
 
 enum {
   START,
