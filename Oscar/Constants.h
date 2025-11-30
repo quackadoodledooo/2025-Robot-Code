@@ -27,7 +27,9 @@ CRGB leds[NUM_LEDS];
     CORAL,
     ALGAE
   } STATE;
-
+  enum {
+    
+  }
 
 //diff variables to be used in controls to control delay
   int diffSTOW = 0;

@@ -86,6 +86,22 @@ void loop() {
   FastLED.show();
   
   /**
+  AUTOS
+  Left - 
+  Right - 
+  Center - 
+  */
+  if(PestoLink.keyHeld(Key::Numpad1)){// LEFT
+
+  }
+  if(PestoLink.keyHeld(Key::Numpad2)){// CENTER
+
+  }
+  if(PestoLink.keyHeld(Key::Numpad3)){ // RIGHT
+
+  }
+
+  /**
   CONTROLS
   Up/Down arrows - Manual elevator control
   Left/Right arrows - Manual pivot control
