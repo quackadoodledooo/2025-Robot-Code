@@ -27,9 +27,6 @@ CRGB leds[NUM_LEDS];
     CORAL,
     ALGAE
   } STATE;
-  enum {
-    
-  }
 
 //diff variables to be used in controls to control delay
   int diffSTOW = 0;
@@ -103,10 +100,10 @@ CRGB leds[NUM_LEDS];
 
   double theta;
   double headingOffset = 0.0;
-  int mod1Offset = 0;
-  int mod2Offset = 0;
-  int mod3Offset = 0;
-  int mod4Offset = 0;
+  int mod1Offset = 405;
+  int mod2Offset = 135;
+  int mod3Offset = 315;
+  int mod4Offset = 45;
   int lastOffsetTime = millis();
   const bool AM_DEBUGGING = false;
 

@@ -1,5 +1,6 @@
 #include "PID.h"
 #include "Constants.h"
+#include "Autos.h"
 
 PID pivotPID(pivotKp, pivotKi, pivotKd, pivotMin, pivotMax);
 
@@ -87,9 +88,9 @@ void loop() {
   
   /**
   AUTOS
-  Left - 
-  Right - 
-  Center - 
+  Left - One L4, load coral
+  Right - One L4, load coral
+  Center - One L4, algae in barge
   */
   if(PestoLink.keyHeld(Key::Numpad1)){// LEFT
 
@@ -248,14 +249,6 @@ void loop() {
   if(pivotGoal<0) pivotGoal = 0;
   if(servoGoal>180) servoGoal = 180;
   if(servoGoal<0) servoGoal = 0;
-
-  elevatorLeft.write(servoGoal);
-  elevatorRight.write((-1 * servoGoal) + 180);
-  
-  pivotError = pivotGoal - pivotPosition;
-  pivot.set(pivotPID.update(pivotError));
-  Serial.println(pivotPosition);
-  Serial.println(pivotGoal);
   
   previousTime = currentTime; 
 }
@@ -407,6 +400,14 @@ void taskUpdateSwerve(void* pvParameters){ // written by Julien
       Turn4.write(0);
       Drive4.setBrakeMode(true);
     }
+
+    elevatorLeft.write(servoGoal);
+    elevatorRight.write((-1 * servoGoal) + 180);
+  
+    pivotError = pivotGoal - pivotPosition;
+    pivot.set(pivotPID.update(pivotError));
+    Serial.println(pivotPosition);
+    Serial.println(pivotGoal);
 
     vTaskDelay(pdMS_TO_TICKS(10));  //this line is like arduino delay() but for rtos tasks
   }
