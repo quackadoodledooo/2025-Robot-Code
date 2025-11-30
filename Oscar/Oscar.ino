@@ -3,18 +3,18 @@
 
 PID pivotPID(pivotKp, pivotKi, pivotKd, pivotMin, pivotMax);
 
-NoU_Motor Drive1(1);
-NoU_Servo Turn1(1, 500, 2500);
-NoU_Motor Drive2(2);
-NoU_Servo Turn2(2, 500, 2500);
-NoU_Motor Drive3(3);
+NoU_Motor Drive1(4);
+NoU_Servo Turn1(2, 500, 2500);
+NoU_Motor Drive2(5);
+NoU_Servo Turn2(1, 500, 2500);
+NoU_Motor Drive3(8);
 NoU_Servo Turn3(3, 500, 2500);
-NoU_Motor Drive4(4);
+NoU_Motor Drive4(1);
 NoU_Servo Turn4(4, 500, 2500);
 
-NoU_Motor algae1(5);
-NoU_Motor algae2(6);
-NoU_Motor coral(8);
+NoU_Motor algae1(2);
+NoU_Motor algae2(3);
+NoU_Motor coral(6);
 NoU_Motor pivot(7);
 
 NoU_Servo elevatorLeft(5);
@@ -29,7 +29,7 @@ int angular_scale = (5.0 * 2.0 * PI) / measured_angle;
 
 void setup() {
   NoU3.begin();
-  PestoLink.begin("Midtown #40 Pyrobyte");
+  PestoLink.begin("Midtown #40 Oscar");
   Serial.begin(115200);
   NoU3.calibrateIMUs();
   pivot.beginEncoder();
