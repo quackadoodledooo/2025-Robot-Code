@@ -162,7 +162,15 @@ void leave() {
   Drive1.set(0);
 }
 
-
+/**
+  AUTOS
+  1 - Left one L4, load coral
+  3 - Right one L4, load coral
+  2 - One L4, algae in barge
+  4 - Left one L4, barge, load coral
+  5 - leave
+  6 - Right one L4, barge, load coral 
+  */
 
 void runAuto() {
   if ((PestoLink.keyHeld(Key::Numpad1) || PestoLink.keyHeld(Key::Digit1) && !autoRan)) {
@@ -217,22 +225,6 @@ void loop() {
   }
 
   FastLED.show();
-  
-  /**
-  AUTOS
-  Left - One L4, load coral
-  Right - One L4, load coral
-  Center - One L4, algae in barge
-  */
-  if(PestoLink.keyHeld(Key::Numpad1)){// LEFT
-
-  }
-  if(PestoLink.keyHeld(Key::Numpad2)){// CENTER
-
-  }
-  if(PestoLink.keyHeld(Key::Numpad3)){ // RIGHT
-
-  }
 
   /**
   CONTROLS
