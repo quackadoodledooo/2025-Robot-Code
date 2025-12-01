@@ -22,6 +22,7 @@ CRGB leds[NUM_LEDS];
   double pitch = 0;
   int currentTime = 0;
   int previousTime = 0;
+  bool autoRan = false;
   enum {
     START,
     CORAL,

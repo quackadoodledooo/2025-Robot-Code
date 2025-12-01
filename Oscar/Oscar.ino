@@ -1,6 +1,5 @@
 #include "PID.h"
 #include "Constants.h"
-#include "Autos.h"
 
 PID pivotPID(pivotKp, pivotKi, pivotKd, pivotMin, pivotMax);
 
@@ -35,7 +34,8 @@ void setup() {
   NoU3.calibrateIMUs();
   pivot.beginEncoder();
   xTaskCreatePinnedToCore(taskUpdateSwerve, "taskUpdateSwerve", 4096, NULL, 2, NULL, 1);
-  
+  NoU3.setServiceLight(LIGHT_DISABLED);
+
   pinMode(6, INPUT_PULLUP);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
@@ -44,14 +44,146 @@ void setup() {
   FastLED.show();
 
   //Motor Configs
-  Drive1.setMinimumOutput(0.6);
-  Drive2.setMinimumOutput(0.6);
-  Drive3.setMinimumOutput(0.6);
-  Drive3.setMinimumOutput(0.6);
-  Drive1.setExponent(2);
-  Drive2.setExponent(2);
-  Drive3.setExponent(2);
-  Drive4.setExponent(2);
+  Drive1.setMotorCurve(0.6, 1, 0, 2);
+  Drive2.setMotorCurve(0.6, 1, 0, 2);
+  Drive3.setMotorCurve(0.6, 1, 0, 2);
+  Drive4.setMotorCurve(0.6, 1, 0, 2);
+}
+
+
+
+void leftL4Barge() {
+
+}
+
+
+
+void rightL4Barge() {
+
+}
+
+
+
+void centerL4Barge() {
+
+}
+
+
+
+void leftL4Load() {
+
+}
+
+
+
+void rightL4Load() {
+  
+  //move forward for 3 seconds while moving elevator and pivot to scoring position;
+  Turn4.write(90);
+  Turn3.write(90);
+  Turn2.write(90);
+  Turn1.write(90);
+  Drive4.set(-1);
+  Drive3.set(-1);
+  Drive2.set(-1);
+  Drive1.set(-1);
+  servoGoal = servoL4;
+  delay(1000);
+  pivotGoal = pivotL4;
+  delay(200);
+  Drive4.set(0);
+  Drive3.set(0);
+  Drive2.set(0);
+  Drive1.set(0);
+
+  //score coral;
+  coral.set(1);
+  delay(500);
+  coral.set(0);
+  
+  //move backward while stowing pivot/elevator
+  Drive4.set(1);
+  Drive3.set(1);
+  Drive2.set(1);
+  Drive1.set(1);
+  delay(500);
+  pivotGoal = pivotSTOW;
+  delay(1000);
+  servoGoal = servoSTOW;
+  Drive4.set(0);
+  Drive3.set(0);
+  Drive2.set(0);
+  Drive1.set(0);
+
+  //turn
+  Turn4.write(135);
+  Turn3.write(45);
+  Turn2.write(135);
+  Turn1.write(45);
+  delay(500);
+  Drive4.set(1);
+  Drive3.set(-1);
+  Drive2.set(1);
+  Drive1.set(-1);
+  delay(500);
+  Drive4.set(0);
+  Drive3.set(0);
+  Drive2.set(0);
+  Drive1.set(0);
+
+  //move towards coral station with funnel pointing towards station
+  Turn4.write(135);
+  Turn3.write(45);
+  Turn2.write(135);
+  Turn1.write(45);
+  Drive4.set(1);
+  Drive3.set(1);
+  Drive2.set(1);
+  Drive1.set(1);
+  delay(5000);
+  Drive4.set(0);
+  Drive3.set(0);
+  Drive2.set(0);
+  Drive1.set(0);
+
+}
+
+
+
+void leave() {
+  Drive4.set(1);
+  Drive3.set(1);
+  Drive2.set(1);
+  Drive1.set(1);
+  delay(2000);
+  Drive4.set(0);
+  Drive3.set(0);
+  Drive2.set(0);
+  Drive1.set(0);
+}
+
+
+
+void runAuto() {
+  if ((PestoLink.keyHeld(Key::Numpad1) || PestoLink.keyHeld(Key::Digit1) && !autoRan)) {
+    autoRan = true;
+    leftL4Load();
+  } else if ((PestoLink.keyHeld(Key::Numpad2) || PestoLink.keyHeld(Key::Digit2) && !autoRan)) {
+    autoRan = true;
+    centerL4Barge();
+  } else if ((PestoLink.keyHeld(Key::Numpad3) || PestoLink.keyHeld(Key::Digit3) && !autoRan)) {
+    autoRan = true;
+    rightL4Load();
+  } else if ((PestoLink.keyHeld(Key::Numpad4) || PestoLink.keyHeld(Key::Digit4) && !autoRan)) {
+    autoRan = true;
+    leftL4Barge();
+  } else if ((PestoLink.keyHeld(Key::Numpad5) || PestoLink.keyHeld(Key::Digit5) && !autoRan)) {
+    autoRan = true;
+    leave();
+  } else if ((PestoLink.keyHeld(Key::Numpad6) || PestoLink.keyHeld(Key::Digit6) && !autoRan)) {
+    autoRan = true;
+    rightL4Barge();
+  }
 
 }
 
@@ -251,10 +383,13 @@ void loop() {
   if(servoGoal<0) servoGoal = 0;
   
   previousTime = currentTime; 
+
+      
 }
 
-void taskUpdateSwerve(void* pvParameters){ // written by Julien
-  while(true) {
+void taskUpdateSwerve(void* pvParameters) {
+  while (true) {
+
     // Set up Gyro and its variables
     theta = NoU3.yaw - headingOffset;
 
@@ -404,7 +539,6 @@ void taskUpdateSwerve(void* pvParameters){ // written by Julien
       Drive4.setBrakeMode(true);
       Drive4.set(0);
     }
-
     elevatorLeft.write(servoGoal);
     elevatorRight.write((-1 * servoGoal) + 180);
   
@@ -412,7 +546,7 @@ void taskUpdateSwerve(void* pvParameters){ // written by Julien
     pivot.set(pivotPID.update(pivotError));
     Serial.println(pivotPosition);
     Serial.println(pivotGoal);
-
+    
     vTaskDelay(pdMS_TO_TICKS(10));  //this line is like arduino delay() but for rtos tasks
   }
 }
