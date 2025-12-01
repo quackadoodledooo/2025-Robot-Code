@@ -1,5 +1,5 @@
-#include "PID.h"
 #include "Constants.h"
+#include "PID.h"
 
 PID pivotPID(pivotKp, pivotKi, pivotKd, pivotMin, pivotMax);
 
@@ -27,6 +27,8 @@ NoU_Servo elevatorRight(6);
 int measured_angle = 27.562;
 int angular_scale = (5.0 * 2.0 * PI) / measured_angle;
 
+elevatorLeft.
+
 void setup() {
   NoU3.begin();
   PestoLink.begin("Midtown #40 Oscar");
@@ -50,8 +52,6 @@ void setup() {
   Drive4.setMotorCurve(0.6, 1, 0, 2);
 }
 
-
-
 void leftL4Barge() {
 
 }
@@ -71,7 +71,6 @@ void centerL4Barge() {
 
 
 void leftL4Load() {
-
 }
 
 
@@ -83,6 +82,7 @@ void rightL4Load() {
   Turn3.write(90);
   Turn2.write(90);
   Turn1.write(90);
+  delay(250);
   Drive4.set(-1);
   Drive3.set(-1);
   Drive2.set(-1);
@@ -120,7 +120,7 @@ void rightL4Load() {
   Turn3.write(45);
   Turn2.write(135);
   Turn1.write(45);
-  delay(500);
+  delay(250);
   Drive4.set(1);
   Drive3.set(-1);
   Drive2.set(1);
@@ -133,9 +133,10 @@ void rightL4Load() {
 
   //move towards coral station with funnel pointing towards station
   Turn4.write(135);
-  Turn3.write(45);
+  Turn3.write(135);
   Turn2.write(135);
-  Turn1.write(45);
+  Turn1.write(135);
+  delay(250);
   Drive4.set(1);
   Drive3.set(1);
   Drive2.set(1);
@@ -145,7 +146,6 @@ void rightL4Load() {
   Drive3.set(0);
   Drive2.set(0);
   Drive1.set(0);
-
 }
 
 
@@ -371,7 +371,7 @@ void loop() {
 
   if(pivotGoal>720) pivotGoal = 720;
   if(pivotGoal<0) pivotGoal = 0;
-  if(servoGoal>180) servoGoal = 180;
+  if(servoGoal>150) servoGoal = 150;
   if(servoGoal<0) servoGoal = 0;
   
   previousTime = currentTime; 

@@ -38,6 +38,7 @@ CRGB leds[NUM_LEDS];
   int diffAL3 = 0;
   int diffBarge = 0;
   int lastModeSwitch = 0;
+  int diffAuto = 0; 
 
 //Pivot variables
   int pivotGoal = 0;
@@ -67,10 +68,10 @@ CRGB leds[NUM_LEDS];
     const int servoReady = 20;
     const int servoL2 = 0;
     const int servoL3 = 0;
-    const int servoL4 = 140;
-    const int servoAL2 = 120;
+    const int servoL4 = 120;
+    const int servoAL2 = 100;
     const int servoAL3 = 0;
-    const int servoBarge = 180;
+    const int servoBarge = 150;
 
 //Bindings for Xbox controller
   const int buttonA = 0;
