@@ -173,22 +173,22 @@ void leave() {
   */
 
 void runAuto() {
-  if ((PestoLink.keyHeld(Key::Numpad1) || PestoLink.keyHeld(Key::Digit1) && !autoRan)) {
+  if ((PestoLink.keyHeld(Key::Numpad1) || PestoLink.keyHeld(Key::Digit1) && !autoRan)) { //center, one l4, barge
     autoRan = true;
     leftL4Load();
-  } else if ((PestoLink.keyHeld(Key::Numpad2) || PestoLink.keyHeld(Key::Digit2) && !autoRan)) {
+  } else if ((PestoLink.keyHeld(Key::Numpad2) || PestoLink.keyHeld(Key::Digit2) && !autoRan)) { //left one l4, barge
     autoRan = true;
     centerL4Barge();
-  } else if ((PestoLink.keyHeld(Key::Numpad3) || PestoLink.keyHeld(Key::Digit3) && !autoRan)) {
+  } else if ((PestoLink.keyHeld(Key::Numpad3) || PestoLink.keyHeld(Key::Digit3) && !autoRan)) { //right one l4, load coral
     autoRan = true;
     rightL4Load();
-  } else if ((PestoLink.keyHeld(Key::Numpad4) || PestoLink.keyHeld(Key::Digit4) && !autoRan)) {
+  } else if ((PestoLink.keyHeld(Key::Numpad4) || PestoLink.keyHeld(Key::Digit4) && !autoRan)) { // left one l4, load coral
     autoRan = true;
     leftL4Barge();
-  } else if ((PestoLink.keyHeld(Key::Numpad5) || PestoLink.keyHeld(Key::Digit5) && !autoRan)) {
+  } else if ((PestoLink.keyHeld(Key::Numpad5) || PestoLink.keyHeld(Key::Digit5) && !autoRan)) { //leave
     autoRan = true;
     leave();
-  } else if ((PestoLink.keyHeld(Key::Numpad6) || PestoLink.keyHeld(Key::Digit6) && !autoRan)) {
+  } else if ((PestoLink.keyHeld(Key::Numpad6) || PestoLink.keyHeld(Key::Digit6) && !autoRan)) { //
     autoRan = true;
     rightL4Barge();
   }
@@ -222,6 +222,10 @@ void loop() {
 
   if (PestoLink.buttonHeld(leftMain)) {
       PestoLink.rumble();
+  }
+
+  if(STATE == START){
+    runAuto();
   }
 
   FastLED.show();
