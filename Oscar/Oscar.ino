@@ -393,12 +393,16 @@ void taskUpdateSwerve(void* pvParameters){ // written by Julien
     } else {
       Turn1.write(0);
       Drive1.setBrakeMode(true);
+      Drive1.set(0);
       Turn2.write(0);
       Drive2.setBrakeMode(true);
+      Drive2.set(0);
       Turn3.write(0);
       Drive3.setBrakeMode(true);
+      Drive3.set(0);
       Turn4.write(0);
       Drive4.setBrakeMode(true);
+      Drive4.set(0);
     }
 
     elevatorLeft.write(servoGoal);

@@ -2,7 +2,7 @@
 #define AUTOS
 #include <Arduino.h>
 
-void leftL4Barge() {
+/*void leftL4Barge() {
 
 }
 
@@ -111,5 +111,5 @@ void leave() {
   Drive2.set(0);
   Drive1.set(0);
 }
-
+*/
 #endif
