@@ -21,7 +21,7 @@ CRGB leds[NUM_LEDS];
   double roll = 0;
   double pitch = 0;
   int currentTime = 0;
-  int previousTime = 0;
+  int previousTime = millis();
   bool autoRan = false;
   enum {
     START,
