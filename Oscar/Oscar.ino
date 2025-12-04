@@ -37,7 +37,7 @@ void setup() {
   NoU3.setServiceLight(LIGHT_DISABLED);
   pivot.setInverted(true);
 
-  pinMode(6, INPUT_PULLUP);
+  pinMode(DATA_PIN, INPUT_PULLUP);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
   FastLED.setBrightness(20);
@@ -223,7 +223,7 @@ void loop() {
   float batteryVoltage = NoU3.getBatteryVoltage();
   PestoLink.printBatteryVoltage(batteryVoltage);
 
-  /*if (PestoLink.buttonHeld(leftMain)) {
+  if (PestoLink.buttonHeld(leftMain)) {
       PestoLink.rumble();
   }
 
@@ -252,6 +252,7 @@ void loop() {
     B - Barge
     Left trigger - intake
     Right trigger - outtake
+    */
   
 
   if(PestoLink.keyHeld(Key::ArrowUp)) {
@@ -398,7 +399,6 @@ void loop() {
 
   pivot.set(pivotPID.update(pivotError));
   Serial.println(pivotPosition);
-  Serial.println(pivotGoal);*/
 }
 
 void taskUpdateSwerve(void* pvParameters) {
