@@ -37,7 +37,6 @@ void setup() {
   NoU3.setServiceLight(LIGHT_DISABLED);
   pivot.setInverted(true);
 
-  pinMode(6, INPUT_PULLUP);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
   FastLED.setBrightness(20);
