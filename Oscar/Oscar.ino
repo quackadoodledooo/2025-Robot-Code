@@ -62,7 +62,6 @@ void rightL4Barge() {
 }
 
 
-
 void centerL4Barge() {
 
 }
@@ -213,7 +212,6 @@ void setLEDS() {
 
 void loop() {
   
-  NoU3.updateIMUs();
   NoU3.updateServiceLight();
   heading = NoU3.yaw * angular_scale;
   roll = NoU3.roll * angular_scale;
@@ -225,7 +223,7 @@ void loop() {
   float batteryVoltage = NoU3.getBatteryVoltage();
   PestoLink.printBatteryVoltage(batteryVoltage);
 
-  if (PestoLink.buttonHeld(leftMain)) {
+  /*if (PestoLink.buttonHeld(leftMain)) {
       PestoLink.rumble();
   }
 
@@ -254,7 +252,7 @@ void loop() {
     B - Barge
     Left trigger - intake
     Right trigger - outtake
-  */
+  
 
   if(PestoLink.keyHeld(Key::ArrowUp)) {
     servoGoal++;
@@ -394,12 +392,18 @@ void loop() {
   
   previousTime = currentTime; 
   pivotError = pivotGoal - pivotPosition;
-      
+    
+  elevatorLeft.write(servoGoal);
+  elevatorRight.write((-1 * servoGoal) + 180);
+
+  pivot.set(pivotPID.update(pivotError));
+  Serial.println(pivotPosition);
+  Serial.println(pivotGoal);*/
 }
 
 void taskUpdateSwerve(void* pvParameters) {
   while (true) {
-
+      
     // Set up Gyro and its variables
     theta = NoU3.yaw - headingOffset;
 
@@ -531,7 +535,7 @@ void taskUpdateSwerve(void* pvParameters) {
       Drive1.set(drivetrainVectors[0][0]);
       Turn2.write(int(drivetrainVectors[1][1]));
       Drive2.set(drivetrainVectors[1][0]);
-      Turn3.write(int(drivetrainVectors[2][1]));
+      Turn3.write(int(drivetrainVectors[2][1]));//int(drivetrainVectors[2][1])
       Drive3.set(drivetrainVectors[2][0]);
       Turn4.write(int(drivetrainVectors[3][1]));
       Drive4.set(drivetrainVectors[3][0]);
@@ -549,12 +553,6 @@ void taskUpdateSwerve(void* pvParameters) {
       Drive4.setBrakeMode(true);
       Drive4.set(0);
     }
-    elevatorLeft.write(servoGoal);
-    elevatorRight.write((-1 * servoGoal) + 180);
-  
-    pivot.set(pivotPID.update(pivotError));
-    Serial.println(pivotPosition);
-    Serial.println(pivotGoal);
     
     vTaskDelay(pdMS_TO_TICKS(10));  //this line is like arduino delay() but for rtos tasks
   }
