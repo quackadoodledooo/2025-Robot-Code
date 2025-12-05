@@ -35,8 +35,9 @@ void setup() {
   pivot.beginEncoder();
   xTaskCreatePinnedToCore(taskUpdateSwerve, "taskUpdateSwerve", 4096, NULL, 2, NULL, 1);
   NoU3.setServiceLight(LIGHT_DISABLED);
+  pivot.setInverted(true);
 
-  pinMode(6, INPUT_PULLUP);
+  pinMode(DATA_PIN, INPUT_PULLUP);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
   FastLED.setBrightness(20);
@@ -59,7 +60,6 @@ void leftL4Barge() {
 void rightL4Barge() {
 
 }
-
 
 
 void centerL4Barge() {
@@ -174,21 +174,27 @@ void runAuto() {
   if ((PestoLink.keyHeld(Key::Numpad1) || PestoLink.keyHeld(Key::Digit1) && !autoRan)) { //center, one l4, barge
     autoRan = true;
     leftL4Load();
+    STATE = CORAL;
   } else if ((PestoLink.keyHeld(Key::Numpad2) || PestoLink.keyHeld(Key::Digit2) && !autoRan)) { //left one l4, barge
     autoRan = true;
     centerL4Barge();
+    STATE = CORAL;
   } else if ((PestoLink.keyHeld(Key::Numpad3) || PestoLink.keyHeld(Key::Digit3) && !autoRan)) { //right one l4, load coral
     autoRan = true;
     rightL4Load();
+    STATE = CORAL;
   } else if ((PestoLink.keyHeld(Key::Numpad4) || PestoLink.keyHeld(Key::Digit4) && !autoRan)) { // left one l4, load coral
     autoRan = true;
     leftL4Barge();
+    STATE = CORAL;
   } else if ((PestoLink.keyHeld(Key::Numpad5) || PestoLink.keyHeld(Key::Digit5) && !autoRan)) { //leave
     autoRan = true;
     leave();
+    STATE = CORAL;
   } else if ((PestoLink.keyHeld(Key::Numpad6) || PestoLink.keyHeld(Key::Digit6) && !autoRan)) { //
     autoRan = true;
     rightL4Barge();
+    STATE = CORAL;
   }
 
 }
@@ -206,7 +212,6 @@ void setLEDS() {
 
 void loop() {
   
-  NoU3.updateIMUs();
   NoU3.updateServiceLight();
   heading = NoU3.yaw * angular_scale;
   roll = NoU3.roll * angular_scale;
@@ -223,7 +228,7 @@ void loop() {
   }
 
   if(STATE == START){
-    runAuto();
+    runAuto(); 
   }
 
   FastLED.show();
@@ -247,7 +252,8 @@ void loop() {
     B - Barge
     Left trigger - intake
     Right trigger - outtake
-  */
+    */
+  
 
   if(PestoLink.keyHeld(Key::ArrowUp)) {
     servoGoal++;
@@ -279,6 +285,10 @@ void loop() {
          algae2.setBrakeMode(true);
       } 
     }
+  }
+
+  if(PestoLink.keyHeld(Key::Numpad9)) {
+    STATE = CORAL;
   }
 
   if(PestoLink.buttonHeld(rightBumper)) { //Prepare to score
@@ -330,8 +340,10 @@ void loop() {
     if(PestoLink.buttonHeld(leftTrigger)) { //INTAKE
        coral.set(1);
     }
-    if(PestoLink.buttonHeld(rightTrigger)){ //OUTTAKE
+    else if(PestoLink.buttonHeld(rightTrigger)){ //OUTTAKE
       coral.set(-1);
+    } else {
+      coral.set(0);
     }
 
   } else if (STATE == ALGAE) { // ALGAE MODE PRESETS
@@ -365,25 +377,33 @@ void loop() {
       algae1.set(1);
       algae2.set(-1);
     }
-    if(PestoLink.buttonHeld(rightTrigger)){// OUTTAKE
+    else if(PestoLink.buttonHeld(rightTrigger)){// OUTTAKE
       algae1.set(-1);
       algae2.set(1);
+    } else {
+      algae1.set(0);
+      algae2.set(0);
     }
   }
 
   if(pivotGoal>720) pivotGoal = 720;
   if(pivotGoal<0) pivotGoal = 0;
-  if(servoGoal>150) servoGoal = 150;
+  if(servoGoal>130) servoGoal = 130;
   if(servoGoal<0) servoGoal = 0;
   
   previousTime = currentTime; 
+  pivotError = pivotGoal - pivotPosition;
+    
+  elevatorLeft.write(servoGoal);
+  elevatorRight.write((-1 * servoGoal) + 180);
 
-      
+  pivot.set(pivotPID.update(pivotError));
+  Serial.println(pivotPosition);
 }
 
 void taskUpdateSwerve(void* pvParameters) {
   while (true) {
-
+      
     // Set up Gyro and its variables
     theta = NoU3.yaw - headingOffset;
 
@@ -515,7 +535,7 @@ void taskUpdateSwerve(void* pvParameters) {
       Drive1.set(drivetrainVectors[0][0]);
       Turn2.write(int(drivetrainVectors[1][1]));
       Drive2.set(drivetrainVectors[1][0]);
-      Turn3.write(int(drivetrainVectors[2][1]));
+      Turn3.write(int(drivetrainVectors[2][1]));//int(drivetrainVectors[2][1])
       Drive3.set(drivetrainVectors[2][0]);
       Turn4.write(int(drivetrainVectors[3][1]));
       Drive4.set(drivetrainVectors[3][0]);
@@ -533,13 +553,6 @@ void taskUpdateSwerve(void* pvParameters) {
       Drive4.setBrakeMode(true);
       Drive4.set(0);
     }
-    elevatorLeft.write(servoGoal);
-    elevatorRight.write((-1 * servoGoal) + 180);
-  
-    pivotError = pivotGoal - pivotPosition;
-    pivot.set(pivotPID.update(pivotError));
-    Serial.println(pivotPosition);
-    Serial.println(pivotGoal);
     
     vTaskDelay(pdMS_TO_TICKS(10));  //this line is like arduino delay() but for rtos tasks
   }
