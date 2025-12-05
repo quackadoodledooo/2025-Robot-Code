@@ -27,8 +27,6 @@ NoU_Servo elevatorRight(6);
 int measured_angle = 27.562;
 int angular_scale = (5.0 * 2.0 * PI) / measured_angle;
 
-elevatorLeft.
-
 void setup() {
   NoU3.begin();
   PestoLink.begin("Midtown #40 Oscar");
