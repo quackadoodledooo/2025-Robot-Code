@@ -217,7 +217,7 @@ void loop() {
   roll = NoU3.roll * angular_scale;
   pitch = NoU3.pitch * angular_scale;
   currentTime = millis();
-  pivotPosition = pivot.getPosition();
+  pivotPosition = ((pivot.getPosition()/1793.103) * 360);
   setLEDS();
 
   float batteryVoltage = NoU3.getBatteryVoltage();
@@ -256,10 +256,10 @@ void loop() {
   
 
   if(PestoLink.keyHeld(Key::ArrowUp)) {
-    servoGoal++;
+    servoGoal = servoGoal + 0.1;
   }
   if(PestoLink.keyHeld(Key::ArrowDown)) {
-    servoGoal--;
+    servoGoal = servoGoal - 0.01;
   }
   if(PestoLink.keyHeld(Key::ArrowLeft)) {
     pivotGoal--;
@@ -385,12 +385,12 @@ void loop() {
       algae2.set(0);
     }
   }
-
+/*
   if(pivotGoal>720) pivotGoal = 720;
   if(pivotGoal<0) pivotGoal = 0;
   if(servoGoal>130) servoGoal = 130;
   if(servoGoal<0) servoGoal = 0;
-  
+  */
   previousTime = currentTime; 
   pivotError = pivotGoal - pivotPosition;
     
