@@ -21,7 +21,7 @@ CRGB leds[NUM_LEDS];
   double roll = 0;
   double pitch = 0;
   int currentTime = 0;
-  int previousTime = millis();
+  int previousTime = 0;
   bool autoRan = false;
   enum {
     START,
@@ -71,7 +71,7 @@ CRGB leds[NUM_LEDS];
     const int servoL4 = 120;
     const int servoAL2 = 100;
     const int servoAL3 = 0;
-    const int servoBarge = 130;
+    const int servoBarge = 150;
 
 //Bindings for Xbox controller
   const int buttonA = 0;
@@ -102,10 +102,10 @@ CRGB leds[NUM_LEDS];
 
   double theta;
   double headingOffset = 0.0;
-  int mod1Offset = 671; 
-  int mod2Offset = 230; 
-  int mod3Offset = 315; 
-  int mod4Offset = 940; 
+  int mod1Offset = 405;
+  int mod2Offset = 135;
+  int mod3Offset = 315;
+  int mod4Offset = 225;
   int lastOffsetTime = millis();
   const bool AM_DEBUGGING = false;
 
