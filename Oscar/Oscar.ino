@@ -28,6 +28,7 @@ int measured_angle = 27.562;
 int angular_scale = (5.0 * 2.0 * PI) / measured_angle;
 
 void setup() {
+  STATE = START;
   NoU3.begin();
   PestoLink.begin("Midtown #40 Oscar");
   Serial.begin(115200);
@@ -273,68 +274,42 @@ void loop() {
       if(STATE == CORAL) {
          STATE = ALGAE;
          lastModeSwitch = millis();
-         coral.setBrakeMode(true);
-         algae1.setBrakeMode(false);
-         algae2.setBrakeMode(false);
-      }
-      if(STATE == ALGAE){
+      }else{
          STATE = CORAL;
          lastModeSwitch = millis();
-         coral.setBrakeMode(false);
-         algae1.setBrakeMode(true);
-         algae2.setBrakeMode(true);
       } 
     }
   }
 
-  if(PestoLink.keyHeld(Key::Numpad9)) {
+  if(PestoLink.keyHeld(Key::Digit0)) {
     STATE = CORAL;
   }
 
   if(PestoLink.buttonHeld(rightBumper)) { //Prepare to score
-      servoGoal = servoReady+20;
-      diffL2 += currentTime - previousTime;
-      if(diffL2 > 1000){
         pivotGoal = pivotReady;
         servoGoal = servoReady;
-        diffL2 = 0; 
       }
     }
 
   if(STATE == CORAL) { // CORAL MODE PRESETS
     if(PestoLink.buttonHeld(buttonA)) { //L2
-      servoGoal = servoL2+20;
-      diffL2 += currentTime - previousTime;
-      if(diffL2 > 1000){
         pivotGoal = pivotL2;
         servoGoal = servoL2;
-        diffL2 = 0; 
       }
     }
     if(PestoLink.buttonHeld(buttonB)) { //L3
-      servoGoal = servoL3+20;
-      diffL3 += currentTime - previousTime;
-      if(diffL3 > 1000){
         pivotGoal = pivotL3;
         servoGoal = servoL3;
-        diffL3 = 0; 
       }
     }
     if(PestoLink.buttonHeld(buttonX)) { //Stow
       pivotGoal = pivotSTOW;
-      servoGoal = servoSTOW+20;
-      diffSTOW += currentTime - previousTime;
-      if(diffSTOW > 1000){
-        servoGoal = servoSTOW;
-        diffSTOW = 0; 
+      servoGoal = servoSTOW;
       }
     }
     if(PestoLink.buttonHeld(buttonY)) { //L4
       servoGoal = servoL4;
-      diffL4 += currentTime - previousTime;
-      if(diffL4 > 1000){
-        pivotGoal = pivotL4;
-        diffL4 = 0; 
+      pivotGoal = pivotL4;
       }
     }
     if(PestoLink.buttonHeld(leftTrigger)) { //INTAKE
@@ -385,15 +360,15 @@ void loop() {
       algae2.set(0);
     }
   }
-
+/*
   if(pivotGoal>720) pivotGoal = 720;
   if(pivotGoal<0) pivotGoal = 0;
   if(servoGoal>130) servoGoal = 130;
   if(servoGoal<0) servoGoal = 0;
-  
+  */
   previousTime = currentTime; 
   pivotError = pivotGoal - pivotPosition;
-      
+    }  
 }
 
 void taskUpdateSwerve(void* pvParameters) {
@@ -552,8 +527,9 @@ void taskUpdateSwerve(void* pvParameters) {
     elevatorRight.write((-1 * servoGoal) + 180);
   
     pivot.set(pivotPID.update(pivotError));
-    Serial.println(pivotPosition);
-    Serial.println(pivotGoal);
+    Serial.println(STATE);
+   // Serial.println(pivotPosition);
+   // Serial.println(pivotGoal);
     
     vTaskDelay(pdMS_TO_TICKS(10));  //this line is like arduino delay() but for rtos tasks
   }
