@@ -71,7 +71,7 @@ CRGB leds[NUM_LEDS];
     const int servoL4 = 120;
     const int servoAL2 = 100;
     const int servoAL3 = 0;
-    const int servoBarge = 150;
+    const int servoBarge = 130;
 
 //Bindings for Xbox controller
   const int buttonA = 0;
